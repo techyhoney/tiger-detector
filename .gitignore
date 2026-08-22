@@ -1,0 +1,28 @@
+# --- Dataset (kept out of git; it's large / not code) ---
+/dataset
+
+# --- Model artifacts & training outputs ---
+tiger_detector/outputs/
+*.pt
+*.pth
+*.onnx
+*.tflite
+*.ncnn.*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- OS / editor cruft ---
+.DS_Store
+.vscode/
+.idea/
+*.swp
