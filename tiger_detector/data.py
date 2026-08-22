@@ -135,10 +135,13 @@ def build_transforms(train: bool):
     if train:
         return transforms.Compose(
             [
+                # Downsize to the 224px square FIRST, then augment the small
+                # image. Rotating/color-jittering a 2400px crop and *then*
+                # shrinking it wastes most of the CPU work per sample.
+                LetterboxResize(config.IMG_SIZE, config.LETTERBOX_FILL),
                 transforms.RandomHorizontalFlip(),
                 transforms.RandomRotation(12, fill=config.LETTERBOX_FILL),
                 transforms.ColorJitter(0.2, 0.2, 0.2, 0.05),
-                LetterboxResize(config.IMG_SIZE, config.LETTERBOX_FILL),
                 *common_tail,
                 transforms.RandomErasing(p=0.25),
             ]
@@ -178,6 +181,12 @@ def build_dataloaders():
     samples = scan_dataset()
     train_s, val_s, test_s = split_samples(samples)
 
+    # Keep workers alive between epochs and let each buffer several batches
+    # ahead, so the GPU isn't starved waiting on JPEG decode/augment.
+    extra = {}
+    if config.NUM_WORKERS > 0:
+        extra = {"persistent_workers": True, "prefetch_factor": 4}
+
     train_dl = DataLoader(
         CropDataset(train_s, train=True),
         batch_size=config.BATCH_SIZE,
@@ -185,6 +194,7 @@ def build_dataloaders():
         num_workers=config.NUM_WORKERS,
         pin_memory=True,
         drop_last=False,
+        **extra,
     )
     val_dl = DataLoader(
         CropDataset(val_s, train=False),
@@ -192,6 +202,7 @@ def build_dataloaders():
         shuffle=False,
         num_workers=config.NUM_WORKERS,
         pin_memory=True,
+        **extra,
     )
     test_dl = DataLoader(
         CropDataset(test_s, train=False),
@@ -199,6 +210,7 @@ def build_dataloaders():
         shuffle=False,
         num_workers=config.NUM_WORKERS,
         pin_memory=True,
+        **extra,
     )
     meta = {
         "n_train": len(train_s),

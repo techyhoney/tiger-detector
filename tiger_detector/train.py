@@ -77,8 +77,11 @@ def main():
     ap.add_argument("--freeze-epochs", type=int, default=config.FREEZE_EPOCHS)
     ap.add_argument("--finetune-epochs", type=int, default=config.FINETUNE_EPOCHS)
     ap.add_argument("--batch-size", type=int, default=config.BATCH_SIZE)
+    ap.add_argument("--num-workers", type=int, default=config.NUM_WORKERS,
+                    help="dataloader workers; set near your vCPU count")
     args = ap.parse_args()
     config.BATCH_SIZE = args.batch_size
+    config.NUM_WORKERS = args.num_workers
 
     utils.set_seed()
     device = utils.get_device()
