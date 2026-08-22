@@ -83,7 +83,10 @@ def main():
     utils.set_seed()
     device = utils.get_device()
     use_amp = device.type == "cuda"          # mixed precision on the A4000
-    scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
+    try:
+        scaler = torch.amp.GradScaler("cuda", enabled=use_amp)   # torch >= 2.4
+    except (AttributeError, TypeError):
+        scaler = torch.cuda.amp.GradScaler(enabled=use_amp)      # older torch
     print(f"Device: {device}  (AMP mixed-precision: {use_amp})")
 
     train_dl, val_dl, test_dl, meta = build_dataloaders()
