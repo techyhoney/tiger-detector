@@ -1,0 +1,13 @@
+# YOLO dataset config. Point `path` at the folder coco_to_yolo.py built.
+# Structure expected:
+#   <path>/images/{train,val,test}/*.jpg
+#   <path>/labels/{train,val,test}/*.txt
+path: /absolute/path/to/yolo_dataset
+train: images/train
+val: images/val
+test: images/test
+
+# Single class for now. Add more later, e.g.:
+#   names: {0: tiger, 1: leopard, 2: elephant}
+names:
+  0: tiger

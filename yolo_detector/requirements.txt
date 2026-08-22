@@ -1,0 +1,5 @@
+# YOLO detector training (run on the A4000)
+ultralytics>=8.3.0     # YOLO11 / YOLO26
+# torch/torchvision come in as ultralytics deps; if you need a specific CUDA
+# build, install it first from https://pytorch.org before ultralytics.
+pillow>=10.0

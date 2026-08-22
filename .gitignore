@@ -3,11 +3,14 @@
 
 # --- Model artifacts & training outputs ---
 tiger_detector/outputs/
+runs/                     # ultralytics YOLO training runs
 *.pt
 *.pth
 *.onnx
 *.tflite
 *.ncnn.*
+*.tmp                     # partial downloads (e.g. MegaDetector weights)
+MDV6*                     # MegaDetector weight files pulled at runtime
 
 # --- Python ---
 __pycache__/
