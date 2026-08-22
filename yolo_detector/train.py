@@ -50,8 +50,11 @@ def main():
         cos_lr=True,
         plots=True,
     )
-    print("\nDone. Best weights: runs/detect/%s/weights/best.pt" % args.name)
-    print("Next: python val.py --weights runs/detect/%s/weights/best.pt" % args.name)
+    # Ultralytics auto-increments the run folder (name, name-2, ...), so read
+    # the real path back instead of guessing it from --name.
+    best = model.trainer.save_dir / "weights" / "best.pt"
+    print(f"\nDone. Best weights: {best}")
+    print(f"Next: python val.py --weights {best} --data {args.data}")
 
 
 if __name__ == "__main__":
